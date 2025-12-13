@@ -1,12 +1,19 @@
 package org.projet.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Data // génère getters, setters, toString, equals, hashCode
+@NoArgsConstructor // génère un constructeur vide
+@AllArgsConstructor // génère un constructeur avec tous les champs
 public class User {
 
     @Id
@@ -34,12 +41,8 @@ public class User {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>(); //
 
     // One-to-many relations
     @OneToMany(mappedBy = "user")

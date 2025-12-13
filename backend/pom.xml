@@ -60,6 +60,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- JSON Web Token (JWT) -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+
         <!-- Pour tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -73,7 +81,8 @@
             </exclusions>
         </dependency>
 
-
+    <!--This is a comment to try what we are doing ?? -->
+    <!--Great, it works, now show me how to create these branches-->
     </dependencies>
 
     <build>
