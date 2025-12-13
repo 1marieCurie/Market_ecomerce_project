@@ -1,4 +1,5 @@
 package org.projet.exception;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    //Conflict 409
+    // Conflict 409
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException ex) {
         return ResponseEntity
@@ -27,15 +28,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR) //500 by defaut this argumen
-        .body("Unexpected error occured, try again.");
+                .status(HttpStatus.INTERNAL_SERVER_ERROR) // 500 by defaut this argument
+                .body(ex.getMessage());
     }
 
 }
 
 // this file is found automaticcaly by spring
-//it handles the generale exceptions : conflict:409 , bad request 400, internal server error : 500,
-//  not found content : 404, forbidden access : 403, unauthorized : 401 are given by defaut by Spring 
+// it handles the generale exceptions : conflict:409 , bad request 400, internal
+// server error : 500,
+// not found content : 404, forbidden access : 403, unauthorized : 401 are given
+// by defaut by Spring
 
 // To remeber :
 // If the error comes from business logic → you handle it
