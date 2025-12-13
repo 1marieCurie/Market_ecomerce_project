@@ -23,5 +23,5 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    // getters & setters et constructeur par lombok
+    // getters & setters 
 }
