@@ -263,4 +263,7 @@
   transition: transform 0.2s;
 }
 
-.btn-remove: hover;
+.btn-remove:hover {
+  transform: scale(1.1);
+}
+

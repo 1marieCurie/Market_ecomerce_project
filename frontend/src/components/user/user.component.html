@@ -1,2 +1,14 @@
-<h1>{{ title }}</h1>
-<p>Hello Khdouja, this is an user page !</p>
+<div class="user-layout">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="logo">🛒 ShopCart</div>
+      <div class="nav-links">
+        <button class="nav-btn" routerLink="/home">Home</button>
+        <button class="nav-btn" routerLink="/user/profile">👤 Profile</button>
+        <button class="nav-btn" routerLink="/user/cart">🛒 Cart</button>
+        <span class="user-info">{{ username }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+</div>

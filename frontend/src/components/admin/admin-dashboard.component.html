@@ -1,0 +1,101 @@
+<div class="admin-dashboard-content">
+  <!-- Hero Section -->
+  <div class="hero admin-hero">
+    <h1>Admin Dashboard</h1>
+    <p>Manage your store's categories and products</p>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-content">
+        <h3>{{ totalProducts }}</h3>
+        <p>Total Products</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏷️</div>
+      <div class="stat-content">
+        <h3>{{ totalCategories }}</h3>
+        <p>Total Categories</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <h3>{{ totalStock }}</h3>
+        <p>Total Stock Items</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Management Sections -->
+  <div class="management-section">
+    <div class="management-header">
+      <h2>Management Tools</h2>
+      <p>Quick access to manage your store</p>
+    </div>
+
+    <div class="management-grid">
+      <!-- Categories Management Card -->
+      <div class="management-card">
+        <div class="card-header">
+          <div class="card-icon">🏷️</div>
+          <h3>Categories Management</h3>
+        </div>
+        <div class="card-body">
+          <p>Create, edit, and delete product categories</p>
+          <ul class="feature-list">
+            <li>✓ Add new categories</li>
+            <li>✓ Upload category images</li>
+            <li>✓ Edit category details</li>
+            <li>✓ Delete categories</li>
+          </ul>
+        </div>
+        <button class="btn-manage" (click)="goToCategories()">
+          Manage Categories →
+        </button>
+      </div>
+
+      <!-- Products Management Card -->
+      <div class="management-card">
+        <div class="card-header">
+          <div class="card-icon">📦</div>
+          <h3>Products Management</h3>
+        </div>
+        <div class="card-body">
+          <p>Create, edit, and delete products from your catalog</p>
+          <ul class="feature-list">
+            <li>✓ Add new products</li>
+            <li>✓ Upload product images</li>
+            <li>✓ Manage pricing & stock</li>
+            <li>✓ Delete products</li>
+          </ul>
+        </div>
+        <button class="btn-manage" (click)="goToProducts()">
+          Manage Products →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <div class="activity-section">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+      <button class="action-btn" (click)="goToCategories()">
+        <span class="action-icon">➕</span>
+        <span>Add New Category</span>
+      </button>
+      <button class="action-btn" (click)="goToProducts()">
+        <span class="action-icon">➕</span>
+        <span>Add New Product</span>
+      </button>
+      <button class="action-btn logout-btn" (click)="logout()">
+        <span class="action-icon">🚪</span>
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
+</div>

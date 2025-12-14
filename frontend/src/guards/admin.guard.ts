@@ -1,25 +1,24 @@
-//this file is for the definition of permited routes in respect to roles for client side (Angular)
-// we shall define some routes assesible only for admins, otherwise we should redirect the user to another page
-
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-@Injectable({
-    providedIn : 'root' // only one instance available of this guard everywhere in the app
+@Injectable({ providedIn: 'root' })
+export class AdminGuard implements CanActivate {
 
-})
-//the class Admin guard should implement the methode canActivate() and return weither true or false
-export class AdminGuard implements CanActivate{
+  constructor(private authService: AuthService, private router: Router) {}
 
-    constructor(private router : Router){} //inject the Router service so we can redirect the user if necessary
-    
-    canActivate(): boolean | UrlTree {
-
-        const roles = JSON.parse(localStorage.getItem('roles') || '[]'); // si pas défini, on prend []
-        if (roles.includes('ROLE_ADMIN')) {
-            return true; // autorisé
-        }
-        return this.router.parseUrl('/'); // sinon, redirige vers la page publique
+  canActivate(): boolean | UrlTree {
+    const token = this.authService.getToken();
+    if (!token) {
+      return this.router.parseUrl('/login');
     }
+
+    const roles = this.authService.getRoles();
+    if (roles && roles.includes('ROLE_ADMIN')) {
+      return true;
+    }
+
+
+    return this.router.parseUrl('/home');
+  }
 }
-//and then we use this class in app.routes.ts

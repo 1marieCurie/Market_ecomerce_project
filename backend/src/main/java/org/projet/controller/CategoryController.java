@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//This controller is for admin use only
 
 @RestController
 @RequestMapping("api/admin/categories")

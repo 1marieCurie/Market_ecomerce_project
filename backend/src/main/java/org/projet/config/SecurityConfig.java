@@ -24,12 +24,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors()
+                .and()
                 .csrf().disable() // disable the csrf for simplicity of API REST
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**", "/public/**").permitAll() // public routes
                 .requestMatchers("/error").permitAll() //permit error route
+                .requestMatchers("/api/categories/**").permitAll() //allow categories
                 .requestMatchers("/api/products/**").permitAll() //public product endpoints for the user
-                .requestMatchers("/admin/**").hasRole("ADMIN") // admin routes, only routes begining by /admin are
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // admin routes, only routes begining by /admin are
                                                                // accessible by admins, it takes ADMIN by default, not ROLE_ADMIN 
                 .anyRequest().authenticated() // all the rest of routes need an authentication
                 .and()
