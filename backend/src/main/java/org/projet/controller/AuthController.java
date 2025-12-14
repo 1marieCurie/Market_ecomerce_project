@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -24,7 +26,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         User user = authService.register(request);
-        return ResponseEntity.ok("User registered with id: " + user.getId());
+
+        // Return JSON instead of plain text
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "User registered successfully",
+            "userId", user.getId()
+        ));
     }
 
     @PostMapping("/login")
