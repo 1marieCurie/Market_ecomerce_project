@@ -10,6 +10,9 @@ public interface ProductService {
     ProductAdminResponseDTO create(ProductRequest request);
 
     ProductAdminResponseDTO update(Long id, ProductRequest request);
+    // Partial update by admin
+    ProductAdminResponseDTO updatePartial(Long id, ProductRequest request);
+
 
     ProductAdminResponseDTO getById(Long id);
 

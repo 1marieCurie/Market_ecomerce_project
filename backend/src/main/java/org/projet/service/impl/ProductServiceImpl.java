@@ -79,6 +79,40 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toAdminDTO(productRepository.save(product));
     }
 
+        //Partial update added
+    @Override
+    public ProductAdminResponseDTO updatePartial(Long id, ProductRequest request) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        // Only update fields that are not null
+        if (request.getName() != null) product.setName(request.getName());
+        if (request.getDescription() != null) product.setDescription(request.getDescription());
+        if (request.getPrice() != null) product.setPrice(request.getPrice());
+        if (request.getOldPrice() != null) product.setOldPrice(request.getOldPrice());
+        if (request.getStock() != null) product.setStock(request.getStock());
+        if (request.getSku() != null) {
+            // Check for duplicate SKU
+            if (productRepository.existsBySkuAndIdNot(request.getSku(), id)) {
+                throw new ProductAlreadyExistsException(request.getSku());
+            }
+            product.setSku(request.getSku());
+        }
+        if (request.getImageUrl() != null) product.setImageUrl(request.getImageUrl());
+        if (request.getBrand() != null) product.setBrand(request.getBrand());
+        if (request.getCategoryId() != null) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new CategoryNotFoundException(request.getCategoryId()));
+            product.setCategory(category);
+        }
+
+        product.setUpdatedAt(LocalDateTime.now());
+
+        return productMapper.toAdminDTO(productRepository.save(product));
+    }
+
+
     @Override
     public ProductAdminResponseDTO getById(Long id) {
         Product product = productRepository.findById(id)

@@ -39,6 +39,17 @@ public class ProductAdminController {
         return ResponseEntity.ok(updated);
     }
 
+    // Partial update by admin
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductAdminResponseDTO> updatePartial(
+            @PathVariable Long id,
+            @RequestBody ProductRequest request) {
+
+        ProductAdminResponseDTO updated = productService.updatePartial(id, request);
+        return ResponseEntity.ok(updated);
+    }
+
     // Get a product by ID
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
