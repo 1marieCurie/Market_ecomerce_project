@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/admin/categories")
+@RequestMapping("api/admin/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -37,6 +37,15 @@ public class CategoryController {
                                       @Valid @RequestBody CategoryRequestDTO dto) {
         return categoryService.update(id, dto);
     }
+
+    //partial modification
+    @PatchMapping("/{id}")
+    public CategoryResponseDTO updatePartial(
+            @PathVariable Long id,
+            @RequestBody CategoryRequestDTO dto) {
+        return categoryService.updatePartial(id, dto);
+    }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

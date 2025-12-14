@@ -55,6 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
         return mapToResponse(category);
     }
 
+        //full update to the category
     public CategoryResponseDTO update(Long id, CategoryRequestDTO dto) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException("Category Not Found."));
@@ -66,6 +67,25 @@ public class CategoryServiceImpl implements CategoryService {
 
         return mapToResponse(categoryRepository.save(category));
     }
+    //partial update
+    public CategoryResponseDTO updatePartial(Long id, CategoryRequestDTO dto) {
+    Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new CategoryNotFoundException(id));
+
+    if (dto.getName() != null) {
+        category.setName(dto.getName());
+    }
+    if (dto.getDescription() != null) {
+        category.setDescription(dto.getDescription());
+    }
+    if (dto.getImageUrl() != null) {
+        category.setImageUrl(dto.getImageUrl());
+    }
+    category.setUpdatedAt(LocalDateTime.now());
+    
+    return mapToResponse(categoryRepository.save(category));
+    }
+
 
     public void delete(Long id) {
         Category category = categoryRepository.findById(id)
