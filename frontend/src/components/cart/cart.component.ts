@@ -30,35 +30,40 @@ export class CartComponent implements OnInit {
   }
 
   loadCart() {
+    this.loading = true;
     this.cartService.getCartItems().subscribe(items => {
       this.cartItems = items;
       this.calculateTotal();
       this.loading = false;
     });
-
-    this.cartService.getCartTotal().subscribe(total => {
-      this.cartTotal = total;
-    });
+    this.cartService.getCartTotal().subscribe(total => this.cartTotal = total);
   }
 
   calculateTotal() {
-    this.cartTotal = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    this.cartTotal = this.cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
   }
 
   updateQuantity(item: CartItem, quantity: string) {
     const qty = parseInt(quantity);
     if (qty > 0) {
-      this.cartService.updateQuantity(item.id, qty);
+      item.quantity = qty;
+      item.totalPrice = item.price * qty;
+      this.cartService.updateCartQuantity(item.productId, qty);
+      this.calculateTotal();
     }
   }
 
-  removeItem(itemId: number) {
-    this.cartService.removeFromCart(itemId);
+  removeItem(item: CartItem) {
+    this.cartService.removeFromCart(item.productId);
+    this.cartItems = this.cartItems.filter(i => i.productId !== item.productId);
+    this.calculateTotal();
   }
 
   clearCart() {
     if (confirm('Are you sure you want to clear your cart?')) {
       this.cartService.clearCart();
+      this.cartItems = [];
+      this.cartTotal = 0;
     }
   }
 

@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("api/admin/categories")
+@RequestMapping("api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -34,18 +33,17 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public CategoryResponseDTO update(@PathVariable Long id,
-                                      @Valid @RequestBody CategoryRequestDTO dto) {
+            @Valid @RequestBody CategoryRequestDTO dto) {
         return categoryService.update(id, dto);
     }
 
-    //partial modification
+    // partial modification
     @PatchMapping("/{id}")
     public CategoryResponseDTO updatePartial(
             @PathVariable Long id,
             @RequestBody CategoryRequestDTO dto) {
         return categoryService.updatePartial(id, dto);
     }
-
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

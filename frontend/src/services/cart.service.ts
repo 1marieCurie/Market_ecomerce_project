@@ -1,40 +1,49 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Product } from './product.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 export interface CartItem {
-  id: number;   // same as product.id
+  productId: number;
   name: string;
   price: number;
   quantity: number;
-  imageUrl?: string;
+  imageUrl: string;
+  totalPrice: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   public cartItems$ = this.cartItemsSubject.asObservable();
 
-  constructor() {
-    this.loadFromStorage();  // defined latter down
+  private baseUrl = 'http://localhost:8080/api/cart';
+
+  constructor(private http: HttpClient) {
+    this.loadCart();
   }
 
-  private loadFromStorage(): void {
-    const stored = localStorage.getItem('cart');
-    if (stored) this.cartItemsSubject.next(JSON.parse(stored));
+  private loadCart() {
+    this.http.get<any[]>(this.baseUrl).subscribe({
+      next: (items) => {
+        const mapped = items.map(i => ({
+          productId: i.productId,
+          name: i.productName,
+          price: i.unitPrice,
+          quantity: i.quantity,
+          imageUrl: i.imageUrl,
+          totalPrice: i.totalPrice
+        }));
+        this.cartItemsSubject.next(mapped);
+      },
+      error: err => console.error('Failed to load cart', err)
+    });
   }
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
-  }
-
-  getCartTotal(): Observable<number> {
-    return this.cartItems$.pipe(
-      map(items => items.reduce((sum, i) => sum + i.price * i.quantity, 0))
-    );
   }
 
   getCartCount(): Observable<number> {
@@ -43,34 +52,32 @@ export class CartService {
     );
   }
 
-  addToCart(product: Product): void {
-    const items = [...this.cartItemsSubject.value];
-    const existing = items.find(i => i.id === product.id);
-    if (existing) existing.quantity++; // if exist , increase quantity
-
-    // we need to define the backend set for cartitem, otherwise there is nothing we can so for this one 'id'
-   // else items.push({ id: product.id, name: product.name, price: product.price, quantity: 1, imageUrl: product.imageUrl });
-    this.updateCart(items); // update cart
+  getCartTotal(): Observable<number> {
+    return this.cartItems$.pipe(
+      map(items => items.reduce((sum, i) => sum + i.totalPrice, 0))
+    );
   }
 
-  updateQuantity(id: number, quantity: number): void {
-    const items = [...this.cartItemsSubject.value];
-    const item = items.find(i => i.id === id);
-    if (item) item.quantity = quantity;
-    this.updateCart(items);
+  addToCart(productId: number) {
+    const request = { productId, quantity: 1 }; // plus besoin de userId
+    this.http.post(`${this.baseUrl}/add`, request).subscribe({
+      next: () => this.loadCart(),
+      error: err => console.error('Add to cart failed', err)
+    });
   }
 
-  removeFromCart(id: number): void {
-    const items = this.cartItemsSubject.value.filter(i => i.id !== id);
-    this.updateCart(items);
+
+  updateCartQuantity(productId: number, quantity: number) {
+    const request = { productId, quantity };
+    this.http.post(`${this.baseUrl}/add`, request).subscribe(() => this.loadCart());
   }
 
-  clearCart(): void {
-    this.updateCart([]);
+
+  removeFromCart(productId: number) {
+    this.http.post(`${this.baseUrl}/remove/${productId}`, {}).subscribe(() => this.loadCart());
   }
 
-  private updateCart(items: CartItem[]): void {
-    this.cartItemsSubject.next(items);
-    localStorage.setItem('cart', JSON.stringify(items));
+  clearCart() {
+    this.http.delete(`${this.baseUrl}/clear`).subscribe(() => this.cartItemsSubject.next([]));
   }
 }

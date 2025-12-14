@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
         this.categories = categories;
         // Créer un map pour associer categoryId -> categoryName
         categories.forEach(cat => {
-          if (cat.id) {
+          if (cat.id != null) {
             this.categoryMap.set(cat.id, cat.name);
           }
         });
@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
         // Enrichir les produits avec le nom de la catégorie
         this.products = data.map(p => ({
           ...p,
-          categoryName: this.categoryMap.get(p.categoryId) || 'Unknown'
+          categoryName: p.categoryId != null ? this.categoryMap.get(p.categoryId) || 'Unknown' : 'Unknown'
         }));
         this.filteredProducts = this.products;
         this.loading = false;
@@ -76,18 +76,18 @@ export class HomeComponent implements OnInit {
 
   filterAndSort() {
     let result = [...this.products];
-    
+
     if (this.selectedCategoryId > 0) {
       result = result.filter(p => p.categoryId === this.selectedCategoryId);
     }
-    
+
     if (this.searchTerm) {
       result = result.filter(p =>
         p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         (p.description?.toLowerCase().includes(this.searchTerm.toLowerCase()) ?? false)
       );
     }
-    
+
     if (this.sortBy === 'price-low') {
       result.sort((a, b) => a.price - b.price);
     } else if (this.sortBy === 'price-high') {
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
     } else {
       result.sort((a, b) => a.name.localeCompare(b.name));
     }
-    
+
     this.filteredProducts = result;
   }
 
@@ -112,8 +112,15 @@ export class HomeComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-    this.cartService.addToCart(product);
+  if (product.id != null) {
+    this.cartService.addToCart(product.id); 
     alert(`${product.name} added to cart!`);
+    this.updateCartCount();
+  }
+}
+
+  updateCartCount() {
+    this.cartService.getCartCount().subscribe(count => this.cartCount = count);
   }
 
   goToCart() {
