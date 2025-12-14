@@ -5,6 +5,7 @@ import org.projet.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+// this class is made to run a script that creates automatically ROLE_USER and ROLE_ADMIN in roles table
 @Component
 public class DataInitializer implements CommandLineRunner {
 
