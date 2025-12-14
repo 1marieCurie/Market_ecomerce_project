@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Product } from './product.service';
 
 export interface CartItem {
-  id: number;          // same as product.id
+  id: number;   // same as product.id
   name: string;
   price: number;
   quantity: number;
@@ -16,10 +16,15 @@ export interface CartItem {
 export class CartService {
 
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
-  cartItems$ = this.cartItemsSubject.asObservable();
+  public cartItems$ = this.cartItemsSubject.asObservable();
 
   constructor() {
-    this.loadFromStorage();
+    this.loadFromStorage();  // defined latter down
+  }
+
+  private loadFromStorage(): void {
+    const stored = localStorage.getItem('cart');
+    if (stored) this.cartItemsSubject.next(JSON.parse(stored));
   }
 
   getCartItems(): Observable<CartItem[]> {
@@ -41,9 +46,11 @@ export class CartService {
   addToCart(product: Product): void {
     const items = [...this.cartItemsSubject.value];
     const existing = items.find(i => i.id === product.id);
-    if (existing) existing.quantity++;
-    else items.push({ id: product.id, name: product.name, price: product.price, quantity: 1, imageUrl: product.imageUrl });
-    this.updateCart(items);
+    if (existing) existing.quantity++; // if exist , increase quantity
+
+    // we need to define the backend set for cartitem, otherwise there is nothing we can so for this one 'id'
+   // else items.push({ id: product.id, name: product.name, price: product.price, quantity: 1, imageUrl: product.imageUrl });
+    this.updateCart(items); // update cart
   }
 
   updateQuantity(id: number, quantity: number): void {
@@ -65,10 +72,5 @@ export class CartService {
   private updateCart(items: CartItem[]): void {
     this.cartItemsSubject.next(items);
     localStorage.setItem('cart', JSON.stringify(items));
-  }
-
-  private loadFromStorage(): void {
-    const stored = localStorage.getItem('cart');
-    if (stored) this.cartItemsSubject.next(JSON.parse(stored));
   }
 }

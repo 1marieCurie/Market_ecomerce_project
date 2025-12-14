@@ -18,7 +18,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // Constructor injection 
+    // Constructor injection
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
@@ -29,10 +29,9 @@ public class AuthController {
 
         // Return JSON instead of plain text
         return ResponseEntity.ok(Map.of(
-            "success", true,
-            "message", "User registered successfully",
-            "userId", user.getId()
-        ));
+                "success", true,
+                "message", "User registered successfully",
+                "userId", user.getId()));
     }
 
     @PostMapping("/login")

@@ -2,9 +2,9 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-content">
-      <div class="logo">🛍️ ShopCart</div>
+      <div class="logo">ShopCart</div>
       <div class="nav-links">
-        <span class="user-info">👋 {{ username }}</span>
+        <span class="user-info">{{ username }}</span>
         <button class="btn-cart" (click)="goToCart()">
           🛒 Cart ({{ cartCount }})
         </button>
@@ -24,7 +24,7 @@
     <div class="search-box">
       <input
         type="text"
-        placeholder="🔍 Search products..."
+        placeholder="Search products..."
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearchChange()"
         class="search-input"
@@ -35,13 +35,13 @@
       <div class="control">
         <label>Category</label>
         <select
-          [(ngModel)]="selectedCategory"
+          [(ngModel)]="selectedCategoryId"
           (ngModelChange)="onCategoryChange()"
           class="select-input"
         >
-          <option value="">All Categories</option>
-          <option *ngFor="let cat of categories" [value]="cat">
-            {{ cat }}
+          <option [value]="0">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">
+            {{ cat.name }}
           </option>
         </select>
       </div>
@@ -56,7 +56,6 @@
           <option value="name">Name (A-Z)</option>
           <option value="price-low">Price (Low to High)</option>
           <option value="price-high">Price (High to Low)</option>
-          <option value="rating">Rating</option>
         </select>
       </div>
     </div>
@@ -72,9 +71,9 @@
   <div class="products-grid" *ngIf="!loading">
     <div class="product-card" *ngFor="let product of filteredProducts">
       <div class="product-image">
-        <img [src]="product.image" [alt]="product.name" />
-        <div class="stock-badge" [class.low-stock]="product.stock < 10">
-          {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+        <img [src]="product.imageUrl" [alt]="product.name" />
+        <div class="stock-badge" [class.low-stock]="product.stock! < 10">
+          {{ product.stock! > 0 ? 'In Stock' : 'Out of Stock' }}
         </div>
         <div class="overlay">
           <button class="btn-view">View Details</button>
@@ -83,22 +82,22 @@
 
       <div class="product-info">
         <h3>{{ product.name }}</h3>
-        <p class="category">{{ product.category }}</p>
-        <p class="description">{{ product.description }}</p>
-
-        <div class="rating">
-          <span class="stars">⭐ {{ product.rating }}</span>
-          <span class="reviews">({{ product.reviews }} reviews)</span>
-        </div>
+        <p class="category">{{ product.categoryName || 'Unknown Category' }}</p>
+        <p class="description">{{ product.description || 'No description available' }}</p>
 
         <div class="product-footer">
-          <span class="price">${{ product.price.toFixed(2) }}</span>
+          <div class="price-section">
+            <span class="price">${{ product.price.toFixed(2) }}</span>
+            <span class="old-price" *ngIf="product.oldPrice">
+              ${{ product.oldPrice.toFixed(2) }}
+            </span>
+          </div>
           <button
             class="btn-add-cart"
             (click)="addToCart(product)"
             [disabled]="product.stock === 0"
           >
-            Add to Cart
+            {{ product.stock! > 0 ? 'Add to Cart' : 'Out of Stock' }}
           </button>
         </div>
       </div>
@@ -107,6 +106,6 @@
 
   <!-- No Products Found -->
   <div class="no-products" *ngIf="!loading && filteredProducts.length === 0">
-    <p>🔍 No products found matching your criteria.</p>
+    <p>No products found matching your criteria.</p>
   </div>
 </div>

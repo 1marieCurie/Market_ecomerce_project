@@ -15,18 +15,11 @@ export class AdminGuard implements CanActivate{
     
     canActivate(): boolean | UrlTree {
 
-         // get the user info then store the connection
-        const userData = localStorage.getItem('user');
-        const user = userData ? JSON.parse(userData) : null // if the localstorage is empty, we return null to avoid problems
-        
-         if(user && user.roles.includes('ROLE_ADMIN')){
-
-            return true; // authorized access
+        const roles = JSON.parse(localStorage.getItem('roles') || '[]'); // si pas défini, on prend []
+        if (roles.includes('ROLE_ADMIN')) {
+            return true; // autorisé
         }
-
-        //else, we redirect :
-        return this.router.parseUrl('/');;
-
+        return this.router.parseUrl('/'); // sinon, redirige vers la page publique
     }
 }
 //and then we use this class in app.routes.ts

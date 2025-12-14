@@ -1,0 +1,242 @@
+<div class="admin-container">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="logo">Admin Panel</div>
+      <div class="nav-links">
+        <button class="nav-btn" (click)="goHome()">← Back to Shop</button>
+        <button class="nav-btn admin-active">Products</button>
+        <button class="nav-btn" (click)="goToCategories()">Categories</button>
+        <span class="user-info">{{ username }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-content">
+    <!-- Header -->
+    <div class="admin-header">
+      <div>
+        <h1>Products Management</h1>
+        <p>Manage product catalog</p>
+      </div>
+      <button class="btn-add" (click)="openForm()" *ngIf="!showForm">
+        ➕ Add New Product
+      </button>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div class="alert alert-success" *ngIf="formSuccess">
+      {{ formSuccess }}
+    </div>
+    <div class="alert alert-danger" *ngIf="formError">
+      {{ formError }}
+    </div>
+
+    <!-- Product Form -->
+    <div class="form-section" *ngIf="showForm">
+      <div class="form-header">
+        <h2>{{ editingProduct ? '✏️ Edit Product' : '➕ New Product' }}</h2>
+        <button class="btn-close" (click)="closeForm()">✕</button>
+      </div>
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+        <!-- Row 1: Name and Brand -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="e.g., iPhone 15 Pro"
+              class="form-control"
+            />
+            <div class="form-error" *ngIf="productForm.get('name')?.errors && productForm.get('name')?.touched">
+              Name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Brand</label>
+            <input
+              type="text"
+              formControlName="brand"
+              placeholder="e.g., Apple"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <!-- Row 2: Price and Old Price -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price *</label>
+            <input
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              step="0.01"
+              class="form-control"
+            />
+            <div class="form-error" *ngIf="productForm.get('price')?.errors && productForm.get('price')?.touched">
+              Price is required and must be positive
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Old Price</label>
+            <input
+              type="number"
+              formControlName="oldPrice"
+              placeholder="0.00"
+              step="0.01"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <!-- Row 3: Stock and SKU -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock</label>
+            <input
+              type="number"
+              formControlName="stock"
+              placeholder="0"
+              class="form-control"
+            />
+            <div class="form-error" *ngIf="productForm.get('stock')?.errors && productForm.get('stock')?.touched">
+              Stock must be 0 or positive
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>SKU *</label>
+            <input
+              type="text"
+              formControlName="sku"
+              placeholder="e.g., SKU-12345"
+              class="form-control"
+            />
+            <div class="form-error" *ngIf="productForm.get('sku')?.errors && productForm.get('sku')?.touched">
+              SKU is required
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Selection -->
+        <div class="form-group">
+          <label>Category *</label>
+          <select formControlName="categoryId" class="form-control">
+            <option value="">Select a category</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+          <div class="form-error" *ngIf="productForm.get('categoryId')?.errors && productForm.get('categoryId')?.touched">
+            Category is required
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            formControlName="description"
+            placeholder="Enter product description"
+            class="form-control textarea"
+            rows="4"
+          ></textarea>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group">
+          <label>Product Image</label>
+          <div class="image-upload">
+            <div class="image-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Preview" />
+              <button type="button" class="btn-remove-image" (click)="imagePreview = null; imageFile = null">✕</button>
+            </div>
+            <label class="upload-label" *ngIf="!imagePreview">
+              <input type="file" accept="image/*" (change)="onImageSelected($event)" class="file-input" />
+              <span>Click to upload product image</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="formLoading || productForm.invalid">
+            {{ formLoading ? 'Saving...' : (editingProduct ? 'Update Product' : 'Create Product') }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar" *ngIf="!showForm">
+      <input
+        type="text"
+        placeholder="Search products..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+      />
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+
+    <!-- Products Table -->
+    <div class="table-container" *ngIf="!loading && !showForm && filteredProducts.length > 0">
+      <div class="table-toggle">
+        <p>Showing {{ filteredProducts.length }} products</p>
+      </div>
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts">
+            <td class="img-cell">
+              <img [src]="product.imageUrl" [alt]="product.name" />
+            </td>
+            <td><strong>{{ product.name }}</strong></td>
+            <td><code>{{ product.sku }}</code></td>
+            <td>{{ getCategoryName(product.categoryId) }}</td>
+            <td class="price-cell">
+              <span class="price">${{ product.price | number:'1.2-2' }}</span>
+              <span class="old-price" *ngIf="product.oldPrice">${{ product.oldPrice | number:'1.2-2' }}</span>
+            </td>
+            <td>
+              <span class="stock-badge" [ngClass]="{'in-stock': product.stock! > 0, 'out-of-stock': product.stock! === 0}">
+                {{ product.stock }}
+              </span>
+            </td>
+            <td>
+              <small>{{ product.createdAt | date:'short' }}</small>
+            </td>
+            <td class="actions">
+              <button class="btn-edit" (click)="openForm(product)" title="Edit">✏️</button>
+              <button class="btn-delete" (click)="deleteProduct(product)" title="Delete">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="!loading && filteredProducts.length === 0 && !showForm">
+      <p>No products found</p>
+    </div>
+  </div>
+</div>

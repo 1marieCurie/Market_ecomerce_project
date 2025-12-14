@@ -10,15 +10,31 @@ import { AdminComponent } from '../components/admin/admin.component';
 import { UserComponent } from '../components/user/user.component';
 import { LoginComponent } from '../components/login/login.component';
 import { RegisterComponent } from '../components/register/register.component';
-//import { HomeComponent } from '../components/home/home.component';
-//import { CartComponent } from '../components/cart/cart.component';
+import { HomeComponent } from '../components/home/home.component';
+import { CartComponent } from '../components/cart/cart.component';
+import {AdminCategoriesComponent} from '../components/admin/categories/admin-categories.component';
+import { AdminProductsComponent } from '../components/admin/products/admin-products.component';
+
 
 export const routes: Routes = [
-    //{ path: '', component: HomeComponent }, // page publique
+    // Public routes
+    { path: '', component: HomeComponent }, // page publique
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    {path : 'admin', component :  AdminComponent, canActivate : [AdminGuard]},
-    {path : 'user', component : UserComponent, canActivate: [AuthGuard] },
-   // { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
-    { path: '**', redirectTo: '' } // wildcard for unknown functions
-]
+    // Protected user routes
+    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+    //{ path: 'product/:id', component: ProductDetailComponent, canActivate: [AuthGuard] },
+    { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
+    // Protected admin routes
+    {
+        path: 'admin',
+        component: AdminComponent,
+        canActivate: [AdminGuard],
+        children: [
+            { path: 'categories', component: AdminCategoriesComponent },
+            {path :'products', component: AdminProductsComponent}
+        ]
+    },
+    // Fallback
+    { path: '**', redirectTo: '/home' }
+];

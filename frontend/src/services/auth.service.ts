@@ -83,4 +83,8 @@ export class AuthService {
     const roles = localStorage.getItem('roles');
     return roles ? JSON.parse(roles) : [];
   }
+
+  getUsername(): string | null {
+  return localStorage.getItem('username');
+}
 }
