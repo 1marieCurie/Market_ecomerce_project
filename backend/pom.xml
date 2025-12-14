@@ -56,7 +56,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.30</version>
+    <scope>provided</scope>
         </dependency>
 
         <!-- JSON Web Token (JWT) moderne -->
@@ -90,6 +91,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!--Hibernetand jakarta validation-->
+        <dependency>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>3.0.2</version>
+        </dependency>
+        <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>8.0.1.Final</version>
+    </dependency>
+
     </dependencies>
 
     <build>
@@ -102,6 +116,15 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <!--Tell maven to use lombok as annotation processor, so we no more have getters and setters problems-->
+                    <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </path>
+                </annotationProcessorPaths>
+
                 </configuration>
             </plugin>
 
