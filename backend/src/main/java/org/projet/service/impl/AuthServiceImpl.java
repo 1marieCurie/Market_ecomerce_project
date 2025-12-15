@@ -78,10 +78,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse login(LoginRequest request) {
-        // verify if email exists
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
-        // verify password
+        
+        User user = userRepository.findByEmailWithRoles(request.getEmail())
+        .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+                // verify password
         // you respected the anonymisation, good work girl
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
