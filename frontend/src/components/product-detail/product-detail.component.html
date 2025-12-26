@@ -1,0 +1,108 @@
+<div class="detail-container">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="logo" (click)="goHome()">
+        <i class="fas fa-shopping-bag"></i> ShopCart
+      </div>
+      <div class="nav-links">
+        <span class="user-info">{{ username }}</span>
+        <button class="btn-cart" (click)="goToCart()">
+          🛒 Cart ({{ cartCount }})
+        </button>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <div class="breadcrumb-content">
+      <span (click)="goHome()" class="breadcrumb-link">Home</span>
+      <span class="breadcrumb-separator">/</span>
+      <span (click)="goHome()" class="breadcrumb-link">{{ product?.categoryName }}</span>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current">{{ product?.name }}</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading product details...</p>
+  </div>
+
+  <!-- Product Detail -->
+  <div class="detail-content" *ngIf="!loading && product">
+    <div class="detail-wrapper">
+      <!-- Product Image -->
+      <div class="product-image-section">
+        <div class="main-image">
+          <img [src]="product.imageUrl" [alt]="product.name" />
+          <div class="stock-badge" [class.low-stock]="product.stock! < 10">
+            {{ product.stock! > 0 ? "In Stock" : "Out of Stock" }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info-section">
+        <p class="category">{{ product.categoryName }}</p>
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <div class="rating-section">
+          <div class="stars">★★★★☆</div>
+          <span class="rating-text">4.5 (120 reviews)</span>
+        </div>
+
+        <div class="price-section">
+          <span class="current-price">${{ product.price.toFixed(2) }}</span>
+          <span class="original-price" *ngIf="product.oldPrice">
+            ${{ product.oldPrice.toFixed(2) }}
+          </span>
+          <span class="discount" *ngIf="product.oldPrice">
+            -{{ calculateDiscount() }}%
+          </span>
+        </div>
+
+        <div class="description-section">
+          <h3>Description</h3>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <div class="stock-info">
+          <p>Stock Available: <strong>{{ product.stock }}</strong></p>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-section">
+          <label>Quantity:</label>
+          <div class="quantity-control">
+            <button (click)="decreaseQuantity()" [disabled]="quantity <= 1">-</button>
+            <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stock || 0" />
+            <button (click)="increaseQuantity()" [disabled]="quantity >= (product.stock || 0)">+</button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button 
+            class="btn-add-cart-large" 
+            (click)="addToCart()"
+            [disabled]="product.stock === 0"
+          >
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+          <button class="btn-wishlist">
+            <i class="fas fa-heart"></i> Wishlist
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Product Found -->
+  <div class="no-product" *ngIf="!loading && !product">
+    <p>Product not found</p>
+  </div>
+</div>

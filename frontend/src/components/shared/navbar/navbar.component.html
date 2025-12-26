@@ -1,0 +1,87 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-logo" (click)="navigateTo('home')">
+      <i class="fas fa-shopping-bag"></i>
+      <span>ShopCart</span>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger" [class.active]="menuOpen" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Nav Menu -->
+    <ul class="nav-menu" [class.active]="menuOpen">
+      <li class="nav-item">
+        <a class="nav-link" (click)="navigateTo('home')">
+          <i class="fas fa-home"></i> Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="navigateTo('home')">
+          <i class="fas fa-th"></i> Categories
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="navigateTo('home')">
+          <i class="fas fa-star"></i> Best Sellers
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="navigateTo('home')">
+          <i class="fas fa-percentage"></i> Deals
+        </a>
+      </li>
+    </ul>
+
+    <!-- Right Section -->
+    <div class="nav-right">
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search products..."
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="search()"
+        />
+        <button class="search-btn" (click)="search()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <!-- User Menu -->
+      <div class="user-menu">
+        <span class="user-name">{{ username || 'Guest' }}</span>
+      </div>
+
+      <!-- Cart -->
+      <button class="btn-cart" (click)="navigateTo('cart')">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge">{{ cartCount }}</span>
+      </button>
+
+      <!-- Logout -->
+      <button class="btn-logout" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Search -->
+  <div class="mobile-search" *ngIf="menuOpen">
+    <input 
+      type="text" 
+      class="mobile-search-input" 
+      placeholder="Search products..."
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="search()"
+    />
+    <button class="mobile-search-btn" (click)="search()">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+</nav>

@@ -1,17 +1,4 @@
 <div class="home-container">
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-content">
-      <div class="logo">ShopCart</div>
-      <div class="nav-links">
-        <span class="user-info">{{ username }}</span>
-        <button class="btn-cart" (click)="goToCart()">
-          🛒 Cart ({{ cartCount }})
-        </button>
-        <button class="btn-logout" (click)="logout()">Logout</button>
-      </div>
-    </div>
-  </nav>
 
   <!-- Hero Section -->
   <div class="hero">
@@ -19,21 +6,25 @@
     <p>Discover amazing products at unbeatable prices</p>
   </div>
 
-  <!-- Filters & Search -->
-  <div class="filters-section">
-    <div class="search-box">
-      <input
-        type="text"
-        placeholder="Search products..."
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange()"
-        class="search-input"
-      />
-    </div>
+  <!-- Main Content with Sidebar -->
+  <div class="main-content">
+    <!-- Sidebar Filters -->
+    <aside class="sidebar-filters" [class.hidden]="!showFilters">
+      <!-- Search Filter -->
+      <div class="filter-card">
+        <h5><i class="fas fa-search"></i> Search</h5>
+        <input
+          type="text"
+          placeholder="Search products..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange()"
+          class="search-input"
+        />
+      </div>
 
-    <div class="filter-controls">
-      <div class="control">
-        <label>Category</label>
+      <!-- Category Filter -->
+      <div class="filter-card">
+        <h5><i class="fas fa-list"></i> Category</h5>
         <select
           [(ngModel)]="selectedCategoryId"
           (ngModelChange)="onCategoryChange()"
@@ -46,8 +37,9 @@
         </select>
       </div>
 
-      <div class="control">
-        <label>Sort By</label>
+      <!-- Sort Filter -->
+      <div class="filter-card">
+        <h5><i class="fas fa-sort"></i> Sort By</h5>
         <select
           [(ngModel)]="sortBy"
           (ngModelChange)="onSortChange()"
@@ -56,56 +48,88 @@
           <option value="name">Name (A-Z)</option>
           <option value="price-low">Price (Low to High)</option>
           <option value="price-high">Price (High to Low)</option>
+          <option value="newest">Newest First</option>
         </select>
       </div>
-    </div>
-  </div>
 
-  <!-- Loading Spinner -->
-  <div class="loading" *ngIf="loading">
-    <div class="spinner"></div>
-    <p>Loading products...</p>
-  </div>
-
-  <!-- Products Grid -->
-  <div class="products-grid" *ngIf="!loading">
-    <div class="product-card" *ngFor="let product of filteredProducts">
-      <div class="product-image">
-        <img [src]="product.imageUrl" [alt]="product.name" />
-        <div class="stock-badge" [class.low-stock]="product.stock! < 10">
-          {{ product.stock! > 0 ? 'In Stock' : 'Out of Stock' }}
-        </div>
-        <div class="overlay">
-          <button class="btn-view">View Details</button>
+      <!-- Price Range Filter -->
+      <div class="filter-card">
+        <h5><i class="fas fa-dollar-sign"></i> Price Range</h5>
+        <div class="price-range-input">
+          <input
+            type="range"
+            [(ngModel)]="maxPrice"
+            (ngModelChange)="onPriceChange()"
+            min="0"
+            max="1000"
+            class="form-range"
+          />
+          <small class="text-muted">$0 - ${{ maxPrice }}</small>
         </div>
       </div>
+    </aside>
 
-      <div class="product-info">
-        <h3>{{ product.name }}</h3>
-        <p class="category">{{ product.categoryName || 'Unknown Category' }}</p>
-        <p class="description">{{ product.description || 'No description available' }}</p>
+    <!-- Products Section -->
+    <section class="products-section">
+      <div class="products-header">
+        <h2>Featured Products</h2>
+        <span class="products-count"
+          >Showing {{ filteredProducts.length }} products</span
+        >
+      </div>
 
-        <div class="product-footer">
-          <div class="price-section">
-            <span class="price">${{ product.price.toFixed(2) }}</span>
-            <span class="old-price" *ngIf="product.oldPrice">
-              ${{ product.oldPrice.toFixed(2) }}
-            </span>
+      <!-- Loading Spinner -->
+      <div class="loading" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading products...</p>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="row g-4" *ngIf="!loading">
+        <div
+          class="col-12 col-sm-6 col-lg-4 col-xl-3"
+          *ngFor="let product of filteredProducts"
+        >
+          <div class="product-card">
+            <div class="product-image">
+              <img [src]="product.imageUrl" [alt]="product.name" />
+              <div
+                class="stock-badge"
+                [class.low-stock]="product.stock! < 10"
+              >
+                {{ product.stock! > 0 ? "In Stock" : "Out of Stock" }}
+              </div>
+              <div class="overlay">
+                <button class="btn-view" (click)="goToProductDetail(product.id)">View Details</button>
+              </div>
+            </div>
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <p class="category">
+                {{ product.categoryName || "Unknown Category" }}
+              </p>
+              <p class="description">
+                {{ product.description || "No description available" }}
+              </p>
+              <div class="product-footer">
+                <span class="price">${{ product.price.toFixed(2) }}</span>
+                <button
+                  class="btn-add-cart"
+                  (click)="addToCart(product)"
+                  [disabled]="product.stock === 0"
+                >
+                  {{ product.stock! > 0 ? "Add to Cart" : "Out of Stock" }}
+                </button>
+              </div>
+            </div>
           </div>
-          <button
-            class="btn-add-cart"
-            (click)="addToCart(product)"
-            [disabled]="product.stock === 0"
-          >
-            {{ product.stock! > 0 ? 'Add to Cart' : 'Out of Stock' }}
-          </button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- No Products Found -->
-  <div class="no-products" *ngIf="!loading && filteredProducts.length === 0">
-    <p>No products found matching your criteria.</p>
+      <!-- No Products Found -->
+      <div class="no-products" *ngIf="!loading && filteredProducts.length === 0">
+        <p>No products found matching your criteria.</p>
+      </div>
+    </section>
   </div>
 </div>

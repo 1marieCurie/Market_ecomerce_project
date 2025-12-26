@@ -19,12 +19,14 @@ export class HomeComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   categories: Category[] = [];
-  categoryMap: Map<number, string> = new Map(); // Map categoryId -> categoryName
+  categoryMap: Map<number, string> = new Map();
   selectedCategoryId = 0;
   searchTerm = '';
   sortBy = 'name';
+  maxPrice = 1000;
   cartCount = 0;
   loading = true;
+  showFilters = true;
 
   constructor(
     private productService: ProductService,
@@ -45,7 +47,6 @@ export class HomeComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: categories => {
         this.categories = categories;
-        // Créer un map pour associer categoryId -> categoryName
         categories.forEach(cat => {
           if (cat.id != null) {
             this.categoryMap.set(cat.id, cat.name);
@@ -59,7 +60,6 @@ export class HomeComponent implements OnInit {
   loadProducts() {
     this.productService.getProducts().subscribe({
       next: data => {
-        // Enrichir les produits avec le nom de la catégorie
         this.products = data.map(p => ({
           ...p,
           categoryName: p.categoryId != null ? this.categoryMap.get(p.categoryId) || 'Unknown' : 'Unknown'
@@ -88,6 +88,9 @@ export class HomeComponent implements OnInit {
       );
     }
 
+    // Filter by price
+    result = result.filter(p => p.price <= this.maxPrice);
+
     if (this.sortBy === 'price-low') {
       result.sort((a, b) => a.price - b.price);
     } else if (this.sortBy === 'price-high') {
@@ -111,11 +114,21 @@ export class HomeComponent implements OnInit {
     this.filterAndSort();
   }
 
+  onPriceChange() {
+    this.filterAndSort();
+  }
+
   addToCart(product: Product) {
-  if (product.id != null) {
-    this.cartService.addToCart(product.id); 
-    alert(`${product.name} added to cart!`);
-    this.updateCartCount();
+    if (product.id != null) {
+      this.cartService.addToCart(product.id);
+      alert(`${product.name} added to cart!`);
+      this.updateCartCount();
+    }
+  }
+
+  goToProductDetail(productId: number | undefined) {
+  if (productId != null) {
+    this.router.navigate(['/product', productId]);
   }
 }
 

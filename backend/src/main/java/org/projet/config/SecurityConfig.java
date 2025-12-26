@@ -29,9 +29,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/public/**").permitAll() // public routes
                 .requestMatchers("/error").permitAll() // permit error route
                 .requestMatchers("/api/**").permitAll() // public product endpoints for the user
-                .requestMatchers("/admin/**").hasRole("ADMIN") // admin routes, only routes begining by /admin are
-                                                               // accessible by admins, it takes ADMIN by default, not
-                                                               // ROLE_ADMIN
+                .requestMatchers("api/admin/**").hasRole("ADMIN") // admin routes, only routes begining by /admin are
+                                                                  // accessible by admins
                 .anyRequest().authenticated() // all the rest of routes need an authentication
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // we don't use sessions,
