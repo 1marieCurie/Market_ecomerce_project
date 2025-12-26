@@ -30,8 +30,13 @@ export class NavbarComponent implements OnInit {
   }
 
   navigateTo(route: string) {
-    this.menuOpen = false;
-    this.router.navigate([route === 'home' ? '/' : `/${route}`]);
+    if (route === 'home') {
+      this.router.navigate(['/']);
+    } else if (route === 'cart') {
+      this.router.navigate(['/cart']);
+    } else {
+      this.router.navigate([`/${route}`]);
+    }
   }
 
   toggleMenu() {

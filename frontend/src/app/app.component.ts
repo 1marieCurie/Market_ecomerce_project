@@ -5,10 +5,7 @@ import { NavbarComponent } from '../components/shared/navbar/navbar.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, NavbarComponent], 
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  imports: [RouterModule, NavbarComponent],
+  templateUrl: './app.component.html'
 })
-export class AppComponent {
-  title = 'frontend';
-}
+export class AppComponent {}
