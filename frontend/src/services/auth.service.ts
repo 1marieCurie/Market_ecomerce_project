@@ -87,4 +87,13 @@ export class AuthService {
   getUsername(): string | null {
   return localStorage.getItem('username');
 }
+//helpers to distinguish the roles
+isAdmin(): boolean {
+  return this.getRoles().includes('ROLE_ADMIN');
+}
+
+isUser(): boolean {
+  return this.getRoles().includes('ROLE_USER');
+}
+
 }

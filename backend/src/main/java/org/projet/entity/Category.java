@@ -21,10 +21,10 @@ public class Category {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable=true)
     private String description;
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = true)
     private String imageUrl;
 
     private LocalDateTime createdAt = LocalDateTime.now();

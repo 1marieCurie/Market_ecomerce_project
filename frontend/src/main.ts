@@ -16,13 +16,12 @@ bootstrapApplication(AppComponent, {
 
   providers : [
     provideRouter(routes),// routes helper
-    
+
     // We have to use Angular 19 syntaxe for interceptors : DI (dependency injection)
     provideHttpClient(withInterceptors([JwtInterceptor])),
-  
 
   ]
 });
-  
+
 // HttpInterceptorFn → must be registered only via withInterceptors([jwtInterceptor]).
 

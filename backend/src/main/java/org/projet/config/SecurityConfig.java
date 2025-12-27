@@ -21,29 +21,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf().disable() // disable the csrf for simplicity of API REST
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/public/**").permitAll() // public routes
-                .requestMatchers("/error").permitAll() // permit error route
-                .requestMatchers("/api/**").permitAll() // public product endpoints for the user
-                .requestMatchers("api/admin/**").hasRole("ADMIN") // admin routes, only routes begining by /admin are
-                                                                  // accessible by admins
-                .anyRequest().authenticated() // all the rest of routes need an authentication
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // we don't use sessions,
-                                                                                             // each request must be
-                                                                                             // authenticated
-                                                                                             // independently
+    http
+        .cors().and() // 
+        .csrf().disable()
+        .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeHttpRequests(auth -> auth
 
-        // Add JwtAuthfilter before the UsernamePasswordAuthenticationFilter (classic
-        // login filter)
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            // Public endpoints
+            .requestMatchers(
+                "/api/auth/**",
+                "/error",
+                "/favicon.ico"
+            ).permitAll()
 
-        return http.build(); // returns the configured SecurityFilterChain bean so Spring Security can use
-                             // it.
+            // Admin endpoints
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-    }
+            // Protected API
+            .requestMatchers("/api/**").authenticated()
+
+            // Everything else
+            .anyRequest().denyAll()
+        );
+
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
+
 }

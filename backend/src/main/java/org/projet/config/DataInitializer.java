@@ -1,5 +1,7 @@
 package org.projet.config;
 
+import java.lang.annotation.Inherited;
+
 import org.projet.entity.Role;
 import org.projet.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +16,7 @@ public class DataInitializer implements CommandLineRunner {
     public DataInitializer(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
+
 
     @Override
     public void run(String... args) throws Exception {

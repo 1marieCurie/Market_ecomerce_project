@@ -41,24 +41,29 @@ export class LoginComponent {
         this.showPassword = !this.showPassword;
     }
 
-    onSubmit(){
-        this.submitted = true;
-        this.error = ''; 
+    onSubmit() {
+  this.submitted = true;
+  this.error = '';
 
-        // stop here if form is invalid
-        if(this.loginForm.invalid){
-            return;
-        }
+  if (this.loginForm.invalid) {
+    return;
+  }
 
-        this.loading = true;
-        this.authService.login( this.loginForm.value ).subscribe({
-            next: (response) => {
-                this.router.navigate(['/user']); // redirect to user dashboard
-            },
-            error: (error) => {
-                this.error = error.error.message || 'An error occurred during login.';
-                this.loading = false;
-            }
-        });
+  this.loading = true;
+
+  this.authService.login(this.loginForm.value).subscribe({
+    next: () => {
+      if (this.authService.isAdmin()) {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/home']);
+      }
+    },
+    error: (error) => {
+      this.error = error.error.message || 'An error occurred during login.';
+      this.loading = false;
     }
+  });
+}
+
 }

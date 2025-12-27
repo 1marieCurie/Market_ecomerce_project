@@ -16,7 +16,7 @@ export interface Category {
 })
 export class CategoryService {
 
-  private adminApiUrl = 'http://localhost:8080/admin/categories';
+  private adminApiUrl = 'http://localhost:8080/api/admin/categories';
   private publicApiUrl = 'http://localhost:8080/api/categories';
 
   constructor(private http: HttpClient) {}
