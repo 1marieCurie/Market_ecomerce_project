@@ -19,7 +19,7 @@ export class AdminGuard implements CanActivate{
         if (roles.includes('ROLE_ADMIN')) {
             return true; // autorisé
         }
-        return this.router.parseUrl('/'); // sinon, redirige vers la page publique
+        return this.router.parseUrl('/login'); // sinon, redirige vers la page publique
     }
 }
 //and then we use this class in app.routes.ts

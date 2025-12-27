@@ -2,13 +2,10 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-content">
-      <div class="logo">Admin Panel</div>
       <div class="nav-links">
         <button class="nav-btn" (click)="goHome()">← Back to Shop</button>
         <button class="nav-btn admin-active">Products</button>
         <button class="nav-btn" (click)="goToCategories()">Categories</button>
-        <span class="user-info">{{ username }}</span>
-        <button class="btn-logout" (click)="logout()">Logout</button>
       </div>
     </div>
   </nav>
@@ -21,7 +18,7 @@
         <p>Manage product catalog</p>
       </div>
       <button class="btn-add" (click)="openForm()" *ngIf="!showForm">
-        ➕ Add New Product
+        + Add New Product
       </button>
     </div>
 
@@ -36,7 +33,7 @@
     <!-- Product Form -->
     <div class="form-section" *ngIf="showForm">
       <div class="form-header">
-        <h2>{{ editingProduct ? '✏️ Edit Product' : '➕ New Product' }}</h2>
+        <h2>{{ editingProduct ? '✏️ Edit Product' : '+ New Product' }}</h2>
         <button class="btn-close" (click)="closeForm()">✕</button>
       </div>
 

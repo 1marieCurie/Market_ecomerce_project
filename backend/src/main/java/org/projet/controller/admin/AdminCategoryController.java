@@ -1,4 +1,4 @@
-package org.projet.controller;
+package org.projet.controller.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

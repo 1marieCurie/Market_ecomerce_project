@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import { CartService } from '../../../services/cart.service';
 import { AuthService } from '../../../services/auth.service';
 
@@ -12,11 +14,16 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
+
   username: string | null = null;
   cartCount = 0;
-  menuOpen = false;
   searchTerm = '';
+  menuOpen = false;
+  isAuthenticated = false;
+  isAdmin = false;
+
+  private authSub!: Subscription;
 
   constructor(
     private router: Router,
@@ -25,8 +32,21 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.username = this.authService.getUsername();
-    this.cartService.getCartCount().subscribe(count => this.cartCount = count);
+    // 🔹 Auth state (réactif)
+    this.authSub = this.authService.isLoggedIn()
+      .subscribe(isLogged => {
+        this.isAuthenticated = isLogged;
+        this.username = isLogged ? this.authService.getUsername() : null;
+        this.isAdmin = isLogged ? this.authService.isAdmin() : false;
+      });
+
+    // 🔹 Cart count
+    this.cartService.getCartCount()
+      .subscribe(count => this.cartCount = count);
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
   }
 
   navigateTo(route: string) {
@@ -39,20 +59,20 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+  goToAdmin() {
+    if (this.isAdmin) {
+      this.router.navigate(['/admin']);
+    }
   }
 
   search() {
     if (this.searchTerm.trim()) {
       console.log('Search for:', this.searchTerm);
-      // Tu peux ajouter une logique de recherche ici
       this.menuOpen = false;
     }
   }
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }

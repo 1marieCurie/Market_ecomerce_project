@@ -2,13 +2,10 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-content">
-      <div class="logo">Admin Panel</div>
       <div class="nav-links">
         <button class="nav-btn" (click)="goHome()">← Back to Shop</button>
         <button class="nav-btn" (click)="goToProducts()">Products</button>
         <button class="nav-btn admin-active">Categories</button>
-        <span class="user-info">{{ username }}</span>
-        <button class="btn-logout" (click)="logout()">Logout</button>
       </div>
     </div>
   </nav>
@@ -21,7 +18,7 @@
         <p>Manage product categories</p>
       </div>
       <button class="btn-add" (click)="openForm()" *ngIf="!showForm">
-        ➕ Add New Category
+        + Add New Category
       </button>
     </div>
 

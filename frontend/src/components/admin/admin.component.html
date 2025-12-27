@@ -1,3 +1,83 @@
+<div class="admin-container">
+  <!-- Admin Navbar -->
+  <nav class="admin-navbar">
+    <div class="navbar-wrapper">
+      <div class="admin-logo">
+        <i class="fas fa-cog"></i>
+        <span>Admin Panel</span>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-back" (click)="goHome()">
+          <i class="fas fa-arrow-left"></i>
+          Back to Shop
+        </button>
+      </div>
+    </div>
+  </nav>
 
+  <!-- Dashboard Content -->
+  <div class="admin-content">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1>Admin Dashboard</h1>
+        <p>Manage your store efficiently</p>
+      </div>
+    </div>
 
-<router-outlet/>
+    <!-- Dashboard Cards -->
+    <div class="dashboard-section">
+      <h2 class="section-title">Management Tools</h2>
+      <div class="dashboard-grid">
+        <!-- Products Card -->
+        <div class="admin-card" (click)="navigateTo('products')">
+          <div class="card-icon">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="card-content">
+            <h3>Products</h3>
+            <p>Manage all products in your catalog</p>
+            <span class="card-action">Manage →</span>
+          </div>
+        </div>
+
+        <!-- Categories Card -->
+        <div class="admin-card" (click)="navigateTo('categories')">
+          <div class="card-icon">
+            <i class="fas fa-th"></i>
+          </div>
+          <div class="card-content">
+            <h3>Categories</h3>
+            <p>Manage product categories</p>
+            <span class="card-action">Manage →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="dashboard-section">
+      <h2 class="section-title">Quick Stats</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background-color: rgba(26, 95, 74, 0.1); color: #1a5f4a;">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Total Products</span>
+            <span class="stat-value">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background-color: rgba(45, 134, 89, 0.1); color: #2d8659;">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Categories</span>
+            <span class="stat-value">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

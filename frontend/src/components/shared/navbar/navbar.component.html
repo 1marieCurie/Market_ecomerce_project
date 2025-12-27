@@ -1,5 +1,7 @@
+<!-- =================== MAIN NAVBAR =================== -->
 <nav class="navbar">
   <div class="navbar-wrapper">
+
     <!-- LOGO -->
     <div class="logo" (click)="navigateTo('home')">
       <div class="logo-box">
@@ -10,9 +12,9 @@
 
     <!-- SEARCH -->
     <div class="search-box">
-      <input 
-        type="text" 
-        class="search-input" 
+      <input
+        type="text"
+        class="search-input"
         placeholder="Search products, brands..."
         [(ngModel)]="searchTerm"
         (keyup.enter)="search()"
@@ -22,18 +24,33 @@
       </button>
     </div>
 
-    <!-- RIGHT ITEMS -->
+    <!-- RIGHT -->
     <div class="navbar-right">
-      <!-- USER -->
-      <div class="user-item">
-        <div class="user-icon">
-          <i class="fas fa-user-circle"></i>
+
+      <!-- USER / LOGIN -->
+      <ng-container *ngIf="isAuthenticated; else loginBlock">
+        <div class="user-item" (click)="goToAdmin()" [title]="isAdmin ? 'Go to Admin Dashboard' : ''">
+          <div class="user-icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="user-text">
+            <span class="user-name">{{ username }}</span>
+            <span class="user-status">Welcome</span>
+          </div>
         </div>
-        <div class="user-text">
-          <span class="user-name">{{ username || 'Guest' }}</span>
-          <span class="user-status">Welcome</span>
+      </ng-container>
+
+      <ng-template #loginBlock>
+        <div class="user-item" (click)="navigateTo('login')">
+          <div class="user-icon">
+            <i class="fas fa-sign-in-alt"></i>
+          </div>
+          <div class="user-text">
+            <span class="user-name">Login</span>
+            <span class="user-status">Access account</span>
+          </div>
         </div>
-      </div>
+      </ng-template>
 
       <!-- CART -->
       <div class="cart-item" (click)="navigateTo('cart')">
@@ -43,7 +60,7 @@
         </div>
         <div class="cart-text">
           <span class="cart-label">Cart</span>
-          <span class="cart-count">{{ cartCount }} items</span>
+          <span class="cart-count">items</span>
         </div>
       </div>
 
@@ -59,15 +76,18 @@
       </div>
 
       <!-- LOGOUT -->
-      <button class="logout-btn" (click)="logout()">
+      <button *ngIf="isAuthenticated"
+              class="logout-btn"
+              (click)="logout()">
         <i class="fas fa-sign-out-alt"></i>
         <span>Logout</span>
       </button>
+
     </div>
   </div>
 </nav>
 
-<!-- SECONDARY NAV -->
+<!-- =================== SECONDARY NAVBAR =================== -->
 <div class="secondary-nav">
   <div class="secondary-wrapper">
     <div class="nav-link" (click)="navigateTo('home')">

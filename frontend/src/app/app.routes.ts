@@ -27,15 +27,9 @@ export const routes: Routes = [
     { path: 'product/:id', component: ProductDetailComponent, canActivate: [AuthGuard] },
     { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
     // Protected admin routes
-    {
-        path: 'admin',
-        component: AdminComponent,
-        canActivate: [AdminGuard],
-        children: [
-            { path: 'categories', component: AdminCategoriesComponent },
-            {path :'products', component: AdminProductsComponent}
-        ]
-    },
+    { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
+    { path: 'admin/products', component: AdminProductsComponent, canActivate: [AdminGuard] },
+    { path: 'admin/categories', component: AdminCategoriesComponent, canActivate: [AdminGuard] },
     // Fallback
     { path: '**', redirectTo: '/home' }
 ];
