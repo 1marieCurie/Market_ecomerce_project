@@ -38,8 +38,11 @@ public class Product {
     @Column(unique = true, length = 100)
     private String sku;
 
-    @Column(length = 255, nullable = true)
+  
+    @Lob
+    @Column(columnDefinition= "LONGTEXT", nullable = true)  
     private String imageUrl;
+
 
     @Column(length = 100)
     private String brand;
