@@ -24,7 +24,8 @@ public class Category {
     @Column(columnDefinition = "TEXT", nullable=true)
     private String description;
 
-    @Column(length = 255, nullable = true)
+    @Lob
+    @Column(columnDefinition= "LONGTEXT", nullable = true)  
     private String imageUrl;
 
     private LocalDateTime createdAt = LocalDateTime.now();

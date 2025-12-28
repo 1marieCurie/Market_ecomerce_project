@@ -17,7 +17,7 @@ public class CategoryRequestDTO {
 
     private String description;
 
-    @Size(max = 255, message = "URL image trop longue")
+    
     private String imageUrl;
 
     // getters & setters
