@@ -59,12 +59,11 @@ Le projet est organisé de manière professionnelle avec des modules clairs et d
 | Auth Google | Backend token → JWT | Frontend OAuth Google |
 
 
+## 📸 Démonstrations
 
-## Démonstrations (à compléter)
-
-- [Connexion au compte utilisateur](photos_demo/demo6.png)  
-- [Client normal authentifié](photos_demo/demo1.png)  
-- [Détails d'un produit](photos_demo/demo2.png)  
-- [Gèrer les catégories par un Admin ](photos_demo/demo3.png)  
-- [Modifier une catégorie](photos_demo/demo4.png)  
-- [Gérer les produits](photos_demo/demo5.png)  
+![Connexion au compte utilisateur](photos_demo/demo1.png)  
+![Client normal authentifié](photos_demo/demo1.png)  
+![Détails d'un produit](photos_demo/demo2.png)  
+![Gérer les catégories par un Admin](photos_demo/demo3.png)  
+![Modifier une catégorie](photos_demo/demo4.png)  
+![Gérer les produits](photos_demo/demo5.png)  
